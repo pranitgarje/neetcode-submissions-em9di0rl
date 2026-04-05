@@ -1,0 +1,35 @@
+class Solution {
+public:
+    string minWindow(string s, string t) {
+         if (t.empty()) return "";
+        unordered_map<char,int> countT,window;
+ 
+       
+        pair<int,int> res={-1,-1};
+        // Store frequecies of characters in t in CountT
+        for(char c:t){                 
+            countT[c]++ ;
+        }
+        int reslen=INT_MAX;
+        int have=0;
+         int need=countT.size();
+        int l=0;
+        for(int r=0;r<s.size();r++){
+            char c=s[r];
+            window[c]++ ;          // window stores freq of characters in s
+            if(countT.count(c) && window[c]==countT[c]) have++ ;
+            while(have==need){
+                if((r-l+1)<reslen){
+                    reslen=r-l+1;
+                    res={l,r};
+                }
+                window[s[l]]-- ;
+                if(countT.count(s[l]) && window[s[l]]<countT[s[l]]) have-- ;
+                l++ ;
+            }
+            
+        }
+
+        return reslen==INT_MAX?"":s.substr(res.first,reslen);
+    }
+};
